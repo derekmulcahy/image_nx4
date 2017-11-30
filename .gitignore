@@ -1,0 +1,7 @@
+.vscode
+iseconfig
+output_files
+*_nx4_xdb
+*_nx4.ipf
+_impactbatch.log
+.DS_Store
