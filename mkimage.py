@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
+import sys
 import pygame
 pygame.init()
-image = pygame.image.load("jw.png")
+name = "jw.png"
+image = pygame.image.load(name)
 
-def printcolor(a, f):
-    for i in range(0, len(r), 32):
-        for j in range(0, 32):
-            if j != 0 and j != 16:
-                print("_", end='', sep='', file=f)
-            if j == 16:
-                print(" ", end='', sep='', file=f)
-            print("%03X" % int(a[i+j]), end='', sep='', file=f)
-        print("", file=f)
-    print("", file=f)
+def printlgs(a, f):
+    for i in range(16, len(a), 32):
+        s = '_'.join(a[i:i+16])
+        print("wire [0:575] lgs%-2d = {576'h%s};" % ((i-16)/32, '__'.join([s, s, s])), sep='', file=f)
+
+def printrgs(a, f):
+    for i in range(0, len(a), 32):
+        s = '_'.join(a[i:i+16])
+        print("wire [0:575] rgs%-2d = {576'h%s};" % (i/32, '__'.join([s, s, s])), sep='', file=f)
 
 (r, g, b) = ([], [], [])
-pixels = pygame.image.tostring(image, "RGB")
+pixels = [("%03X" % d) for d in pygame.image.tostring(image, "RGB")]
 for i in range(0, len(pixels), 3):
     r.append(pixels[i])
     g.append(pixels[i+1])
     b.append(pixels[i+2])
-f = open('image.txt', 'w')
-printcolor(r, f)
-printcolor(g, f)
-printcolor(r, f)
+f = open('image.v', 'w')
+printlgs(r, f)
+printrgs(r, f)
 f.close()
