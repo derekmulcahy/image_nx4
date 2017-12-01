@@ -2,26 +2,23 @@
 import sys
 import pygame
 pygame.init()
-name = "jw.png"
+name = "pacman.png"
 image = pygame.image.load(name)
 
-def printlgs(a, f):
-    for i in range(16, len(a), 32):
-        s = '_'.join(a[i:i+16])
-        print("wire [0:575] lgs%-2d = {576'h%s};" % ((i-16)/32, '__'.join([s, s, s])), sep='', file=f)
-
-def printrgs(a, f):
-    for i in range(0, len(a), 32):
-        s = '_'.join(a[i:i+16])
-        print("wire [0:575] rgs%-2d = {576'h%s};" % (i/32, '__'.join([s, s, s])), sep='', file=f)
+def printxgs(r, g, b, x, o, f):
+    for i in range(o, len(r), 32):
+        sr = '_'.join(r[i:i+16])
+        sg = '_'.join(g[i:i+16])
+        sb = '_'.join(b[i:i+16])
+        print("wire [0:575] %sgs%-2d = {576'h%s};" % (x, (i-o)/32, '__'.join([sr, sg, sb])), sep='', file=f)
 
 (r, g, b) = ([], [], [])
 pixels = [("%03X" % d) for d in pygame.image.tostring(image, "RGB")]
 for i in range(0, len(pixels), 3):
-    r.append(pixels[i])
+    b.append(pixels[i])
     g.append(pixels[i+1])
-    b.append(pixels[i+2])
+    r.append(pixels[i+2])
 f = open('image.v', 'w')
-printlgs(r, f)
-printrgs(r, f)
+printxgs(r, g, b, "l", 16, f)
+printxgs(r, g, b, "r",  0, f)
 f.close()

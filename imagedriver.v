@@ -29,9 +29,9 @@ module imagedriver(
   assign led_gsclk    = gsclk_counter[D];   // gsclk is clock/8
   assign gsclk_strobe = gsclk_counter == 0; // 1 clock wide gsclk pulse every clock/4 cycles
   // assign led_blank    = blank_count == 0;   // generate blank pulse when blank_count wraps around
-  assign dcr          = {16{6'b000010}};    // 6 red dot-correction bits
+  assign dcr          = {16{6'b000100}};    // 6 red dot-correction bits
   assign dcg          = {16{6'b000010}};    // 6 red dot-correction bits
-  assign dcb          = {16{6'b000010}};    // 6 red dot-correction bits, blue needs boosting
+  assign dcb          = {16{6'b000011}};    // 6 red dot-correction bits, blue needs boosting
   assign dc           = {dcb,dcg,dcr};      // assemble a row of the blue, green and red dot-correction bits
 
 `include "image.v"
