@@ -2,12 +2,12 @@
 
 // Simple test program for Barco NX4 led panels.
 
+
 module toplevel(
     input clock,
     output led_sclk,
     output [6:1] led_l_sin,
     output [6:1] led_r_sin,
-    output led_cal_sin,
     input led_xerr,
     output led_mode,
     output led_blank,
@@ -20,12 +20,11 @@ module toplevel(
     output cpld_p2
   );
 
-imagedriver driver (
+  romimage driver (
     .clock(clock),
     .led_sclk(led_sclk),
     .led_l_sin(led_l_sin),
     .led_r_sin(led_r_sin),
-    .led_cal_sin(led_cal_sin),
     .led_mode(led_mode),
     .led_blank(led_blank),
     .led_xlat(led_xlat),

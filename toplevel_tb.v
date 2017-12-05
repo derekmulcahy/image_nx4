@@ -10,7 +10,6 @@ module toplevel_tb;
     wire led_sclk;
     wire [6:1] led_l_sin;
     wire [6:1] led_r_sin;
-    wire led_cal_sin;
     wire led_mode;
     wire led_blank;
     wire led_xlat;
@@ -25,7 +24,6 @@ module toplevel_tb;
         .led_sclk(led_sclk),
         .led_l_sin(led_l_sin),
         .led_r_sin(led_r_sin),
-        .led_cal_sin(led_cal_sin),
         .led_xerr(led_xerr),
         .led_mode(led_mode),
         .led_blank(led_blank),

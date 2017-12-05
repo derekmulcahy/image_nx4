@@ -33,4 +33,14 @@ class MkImage:
         MkImage.print_gs(pixels, "r",  0, has_alpha, f)
         f.close()
 
+        f = open('image.hex', 'w')
+        for i in range(0, len(pixels), 4 if has_alpha else 3):
+            # print(pixels[i], file=f)
+            # print(pixels[i+1], file=f)
+            # print(pixels[i+2], file=f)
+            print(0, file=f)
+            print(0, file=f)
+            print(0, file=f)
+        f.close()
+
 MkImage.process()

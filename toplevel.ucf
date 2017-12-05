@@ -16,7 +16,7 @@ NET "led_blank"     LOC = P34;  # m105
 NET "led_sclk"      LOC = P139; # m106
 NET "led_gsclk"     LOC = P140; # m107
 NET "led_xerr"      LOC = P10;  # m116
-NET "led_cal_sin"   LOC = P22;
+#NET "led_cal_sin"   LOC = P22;
 
 NET "clock"         LOC = P56;  # 40mhz xtal on board
 NET "clock" IOSTANDARD = LVCMOS25;
@@ -55,9 +55,11 @@ NET "cpld_p8"       LOC = P123; # OUT from FPGA - CPLD watchdog - CLK: User I/O,
 #NET "cpld_p43"      LOC = P132; # - I/O: Unrestricted, general-purpose user I/O
 #NET "cpld_p44"      LOC = P23;  # - CLK: User I/O, input, or global buffer input
 
-# p2, p5, p42, p43 are all low and do not change when the program is reloaded
+# p2, p5, p42, p43, p44 are all low and do not change when the program is reloaded
 # p3 and p41 goes high when the first blank is sent,
 # this transition is synchronized with the rising edge of the blank,
 # it stays high until GSCLK stops, then it goes low.
 # p3 and p41 looks like outputs from CPLD
 
+# p2, p5, p42, p43 and p44 are probably inputs to the CPLD and outputs from the FPGA
+# p3 and p41 are probably outputs from the CPLD and inputs to the FPGA

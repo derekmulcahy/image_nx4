@@ -1,11 +1,10 @@
 `timescale 1ns / 1ps
 
-module imagedriver(
+module muximage (
     input  clock,
     output led_sclk,
     output [6:1] led_l_sin,
     output [6:1] led_r_sin,
-    output led_cal_sin,
     output reg led_mode = 1,
     output reg led_blank = 1,
     output reg led_xlat = 0,
@@ -78,8 +77,6 @@ wire [0:575] rgsf;
   assign led_r_sin[4] = led_mode ? dc[bit_count] : rgsd[bit_count];
   assign led_r_sin[5] = led_mode ? dc[bit_count] : rgse[bit_count];
   assign led_r_sin[6] = led_mode ? dc[bit_count] : rgsf[bit_count];
-
-  assign led_cal_sin  = 0; // calibration leds are off
 
   reg [7:0] delay = 0;
 
