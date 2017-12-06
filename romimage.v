@@ -13,12 +13,13 @@ module romimage (
 
   reg [11:0] sins  =  0;
   reg [2:0]  sclk  =  0;
-  reg [11:0] sidx  =  0;
+  reg [12:0] sidx  =  0;
   reg        sclk_stopped  =  0;
   reg [2:0]  gsclk =  0;
   reg [11:0] gsidx =  0;
   reg        gsclk_stopped  =  0;
   reg [3:0]  blank = 0;
+  reg [12:0] off   = 0;
 
   assign {led_r_sin,led_l_sin} = sins;
   assign led_sclk     = sclk[2];
@@ -28,23 +29,24 @@ module romimage (
   assign led_blank    = |blank;
   assign led_xlat     = blank > 4 && blank < 12 && sidx == 0;
 
-  wire [11:0] sidx_max      = 575; // 575
+  wire [10:0] sidx_max      = 575; // 575
   wire [11:0] gsidx_max     = 4095; // 4095
 
-  reg [11:0] rom[3455:0];
+  reg [11:0] rom[4607:0];
 
   initial begin
-    $readmemh("../image.hex", rom, 0, 3455);
+    $readmemh("../image.hex", rom, 0, 4607);
   end
 
   always @(posedge clock) begin
-    sins = rom[sidx];
+    sins = rom[sidx+off];
     if (!sclk_stopped) begin
       sclk <= sclk + 1;
     end
     if (sclk_strobe) begin
       if (sidx == sidx_max) begin
         sidx <= 0;
+        off <= off == 4032 ? 0 : off + 576;
         sclk_stopped <= 1;
       end else begin
         sidx <= sidx + 1;
