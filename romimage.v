@@ -33,7 +33,7 @@ module romimage (
   assign led_sclk     = sclk[2];
   assign led_gsclk    = gsclk[2];
   assign led_blank    = |blank;
-  assign led_xlat     = blank > 2 && blank < 6 && index == 0;
+  assign led_xlat     = blank > 1 && blank < 7 && index == 0;
 
   initial begin
     $readmemh("../image.hex", rom, 0, INDEX_MAX*8-1);
