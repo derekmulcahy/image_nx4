@@ -1,5 +1,8 @@
 `timescale 1ns / 1ps
 
+`define SIDX_MAX_DEFAULT    576
+`define GSIDX_WIDTH_DEFAULT 12
+
 module romimage (
     input  clock,
     output led_sclk,
@@ -11,42 +14,44 @@ module romimage (
     output led_gsclk
   );
 
-  reg [11:0] sins  =  0;
-  reg [2:0]  sclk  =  0;
-  reg [12:0] sidx  =  0;
+  parameter GSIDX_WIDTH = `GSIDX_WIDTH_DEFAULT;
+  parameter SIDX_MAX    = `SIDX_MAX_DEFAULT;
+
+  reg [11:0] sins          =  0;
+  reg [2:0]  sclk          =  0;
+  reg        sclk_pulse    =  0;
+  reg [12:0] sidx          =  0;
   reg        sclk_stopped  =  0;
-  reg [2:0]  gsclk =  0;
-  reg [11:0] gsidx =  0;
-  reg        gsclk_stopped  =  0;
+  reg [2:0]  gsclk         =  0;
+  reg        gsclk_pulse   = 0;
+  reg [GSIDX_WIDTH - 1:0] gsidx =  0;
+  reg        gsclk_stopped =  0;
   reg [3:0]  blank = 0;
   reg [12:0] off   = 0;
 
   assign {led_r_sin,led_l_sin} = sins;
   assign led_sclk     = sclk[2];
-  assign sclk_strobe  = sclk == 7;
   assign led_gsclk    = gsclk[2];
-  assign gsclk_strobe = gsclk == 7;
   assign led_blank    = |blank;
   assign led_xlat     = blank > 4 && blank < 12 && sidx == 0;
 
-  wire [10:0] sidx_max      = 575; // 575
-  wire [11:0] gsidx_max     = 4095; // 4095
+  wire [10:0] sidx_max      = SIDX_MAX-1;
 
-  reg [11:0] rom[4607:0];
+  reg [11:0] rom[SIDX_MAX*8-1:0];
 
   initial begin
-    $readmemh("../image.hex", rom, 0, 4607);
+    $readmemh("../image.hex", rom, 0, SIDX_MAX*8-1);
   end
 
   always @(posedge clock) begin
     sins = rom[sidx+off];
     if (!sclk_stopped) begin
-      sclk <= sclk + 1;
+      {sclk_pulse, sclk} <= sclk + 1;
     end
-    if (sclk_strobe) begin
+    if (sclk_pulse) begin
       if (sidx == sidx_max) begin
         sidx <= 0;
-        off <= off == 4032 ? 0 : off + 576;
+        off <= off == SIDX_MAX*7 ? 0 : off + SIDX_MAX;
         sclk_stopped <= 1;
       end else begin
         sidx <= sidx + 1;
@@ -55,7 +60,7 @@ module romimage (
     if (gsclk_stopped) begin
       blank <= blank + 1;
     end else begin
-      gsclk <= gsclk + 1;
+      {gsclk_pulse, gsclk} <= gsclk + 1;
     end
     if (blank == 0) begin
       if (gsclk_stopped) begin
@@ -64,8 +69,8 @@ module romimage (
       gsclk_stopped = 0;
       blank <= 0;
     end
-    if (gsclk_strobe) begin
-      if (gsidx == gsidx_max) begin
+    if (gsclk_pulse) begin
+      if (&gsidx) begin
         gsclk_stopped = 1;
         gsidx <= 0;
         blank <= 1;

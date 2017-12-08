@@ -2,6 +2,8 @@
 
 // Simple test program for Barco NX4 led panels.
 
+`define SIDX_MAX_DEFAULT    576
+`define GSIDX_WIDTH_DEFAULT 12
 
 module toplevel(
     input clock,
@@ -20,7 +22,13 @@ module toplevel(
     output cpld_p2
   );
 
-  romimage driver (
+  parameter GSIDX_WIDTH = `GSIDX_WIDTH_DEFAULT;
+  parameter SIDX_MAX    = `SIDX_MAX_DEFAULT;
+
+  romimage #(
+    .GSIDX_WIDTH(GSIDX_WIDTH),
+    .SIDX_MAX(SIDX_MAX)
+  ) driver (
     .clock(clock),
     .led_sclk(led_sclk),
     .led_l_sin(led_l_sin),
