@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
-`define SIDX_MAX_DEFAULT    24
-`define GSIDX_WIDTH_DEFAULT 5
+`define INDEX_MAX_DEFAULT   24
+`define GSCLK_WIDTH_DEFAULT 8
 
 module toplevel_tb;
 
@@ -21,13 +21,13 @@ module toplevel_tb;
   wire status_orange;
   wire status_red;
 
-  parameter GSIDX_WIDTH = `GSIDX_WIDTH_DEFAULT;
-  parameter SIDX_MAX    = `SIDX_MAX_DEFAULT;
+  parameter INDEX_MAX   = `INDEX_MAX_DEFAULT;
+  parameter GSCLK_WIDTH = `GSCLK_WIDTH_DEFAULT;
 
   // Instantiate the Unit Under Test (UUT)
   toplevel #(
-    .GSIDX_WIDTH(GSIDX_WIDTH),
-    .SIDX_MAX(SIDX_MAX)
+    .INDEX_MAX(INDEX_MAX),
+    .GSCLK_WIDTH(GSCLK_WIDTH)
   ) uut (
     .clock(clock),
     .led_sclk(led_sclk),
